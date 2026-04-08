@@ -1,0 +1,23 @@
+groups:
+  - name: batch-processing
+    rules:
+      - alert: HighCpuUsage
+        expr: process_cpu_usage{job="batch-processing"} * 100 > 80
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Высокая нагрузка CPU ({{ $value | printf \"%.1f\" }}%)"
+          description: "CPU usage приложения batch-processing превысил 80% в течение более 1 минуты."
+
+      - alert: HighJvmHeapUsage
+        expr: >
+          jvm_memory_used_bytes{area="heap", job="batch-processing"}
+          / jvm_memory_max_bytes{area="heap", job="batch-processing"}
+          * 100 > 85
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Высокое потребление JVM Heap ({{ $value | printf \"%.1f\" }}%)"
+          description: "JVM Heap usage приложения batch-processing превысил 85% в течение более 1 минуты. Возможна утечка памяти или нехватка heap."

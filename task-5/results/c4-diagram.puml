@@ -1,0 +1,45 @@
+@startuml C4_Container_Diagram
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+LAYOUT_WITH_LEGEND()
+
+title C4 Container Diagram — Spring Batch с Наблюдаемостью (Мониторинг / Логирование / Оповещения)
+
+Person(admin, "Администратор", "Запускает batch-задание, мониторит состояние системы через дашборды и получает оповещения")
+
+System_Boundary(batch_system, "Batch Processing System") {
+    Container(app, "Spring Batch Application", "Java 17 / Spring Boot 3", "Читает продукты из CSV, обогащает данными лояльности из БД, записывает результат в PostgreSQL. Экспортирует метрики через Actuator и пишет структурированные JSON-логи.")
+    ContainerDb(postgres, "PostgreSQL", "Реляционная СУБД", "Таблицы: products (результат обработки), loyality_data (справочник лояльности), BATCH_* (метаданные Spring Batch)")
+}
+
+System_Boundary(metrics_stack, "Стек метрик") {
+    Container(prometheus, "Prometheus", "Time-Series DB / Scraper", "Собирает метрики приложения каждые 5 секунд через /actuator/prometheus. Хранит time-series данные. Вычисляет alert-правила.")
+    Container(grafana, "Grafana", "Dashboard & Alerting", "Визуализирует метрики из Prometheus. Предоставляет дашборды с CPU, JVM Heap, потоками. Отправляет оповещения при нарушении пороговых значений.")
+}
+
+System_Boundary(logging_stack, "Стек логирования (ELK)") {
+    Container(filebeat, "Filebeat", "Log Shipper", "Подключается к Docker socket, собирает stdout-логи всех контейнеров, декодирует JSON-поля и передаёт в Logstash.")
+    Container(logstash, "Logstash", "Log Processor", "Принимает события по протоколу Beats, обрабатывает их и индексирует в Elasticsearch.")
+    ContainerDb(elasticsearch, "Elasticsearch", "Полнотекстовый поисковый движок / Log Storage", "Хранит индексированные структурированные логи. Поддерживает поиск и агрегации по полям.")
+    Container(kibana, "Kibana", "Log Viewer", "Предоставляет UI для поиска, фильтрации и визуализации логов из Elasticsearch.")
+}
+
+' --- Пользовательские взаимодействия ---
+Rel(admin, grafana, "Просматривает метрики и дашборды", "HTTP :3000")
+Rel(admin, kibana, "Ищет и анализирует логи", "HTTP :5601")
+Rel(grafana, admin, "Отправляет оповещения при превышении порогов", "Email / Webhook")
+
+' --- Приложение <-> БД ---
+Rel(app, postgres, "Читает loyality_data, пишет products", "JDBC / TCP :5432")
+
+' --- Метрики ---
+Rel(prometheus, app, "Scrape /actuator/prometheus каждые 5с", "HTTP :8080")
+Rel(grafana, prometheus, "Запрашивает метрики (PromQL)", "HTTP :9090")
+
+' --- Логирование ---
+Rel(filebeat, app, "Читает stdout Docker-логи через Docker socket", "Unix socket")
+Rel(filebeat, logstash, "Отправляет log-события", "Beats :5044")
+Rel(logstash, elasticsearch, "Индексирует обработанные события", "HTTP :9200")
+Rel(kibana, elasticsearch, "Поиск и агрегация логов", "HTTP :9200")
+
+@enduml

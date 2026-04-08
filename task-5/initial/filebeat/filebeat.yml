@@ -3,7 +3,7 @@ filebeat.inputs:
     combine_partial: true
     containers:
       path: "/usr/share/dockerlogs/data"
-      stream: "stdout"
+      stream: "all"
       ids:
         - "*"
     exclude_files: ['\.gz$']
@@ -35,7 +35,7 @@ output.logstash:
 logging.level: info
 logging.to_files: false
 logging.to_syslog: false
-loggins.metrice.enabled: false
+logging.metrics.enabled: false
 logging.files:
   path: /var/log/filebeat
   name: filebeat

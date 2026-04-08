@@ -1,0 +1,142 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0" version="27.2.0">
+  <diagram name="C4-ToBe-SpringBatch" id="task4-c4-tobe">
+    <mxGraphModel dx="3930" dy="3450" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="1200" pageHeight="900" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Backend boundary (GCP/ComputeEngine) -->
+        <mxCell id="backend-boundary" value="" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;dashPattern=8 8;strokeColor=default;fillColor=none;" parent="1" vertex="1">
+          <mxGeometry x="1700" y="-30" width="1350" height="720" as="geometry" />
+        </mxCell>
+        <mxCell id="backend-label" value="&lt;b&gt;Backend&lt;/b&gt; GCP/ComputeEngine" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="1700" y="-20" width="200" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Person: Сотрудник склада -->
+        <object c4Name="Сотрудник склада" c4Type="person" c4Description="Использует web-приложение загрузки отчётов" label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;%c4Name%&lt;/b&gt;&lt;/font&gt;&lt;div&gt;[%c4Type%]&lt;/div&gt;&lt;br&gt;&lt;div&gt;&lt;font style=&quot;font-size: 11px&quot;&gt;&lt;font color=&quot;#cccccc&quot;&gt;%c4Description%&lt;/font&gt;&lt;/div&gt;" placeholders="1" id="person-warehouse">
+          <mxCell style="html=1;fontSize=11;dashed=0;whiteSpace=wrap;fillColor=#083F75;strokeColor=#06315C;fontColor=#ffffff;shape=mxgraph.c4.person2;align=center;metaEdit=1;points=[[0.5,0,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0]];resizable=0;" parent="1" vertex="1">
+            <mxGeometry x="900" y="130" width="200" height="180" as="geometry" />
+          </mxCell>
+        </object>
+
+        <!-- Container: Angular Web App -->
+        <object placeholders="1" c4Name="Web-приложение" c4Type="Container" c4Technology="JS, Angular" c4Description="Интерфейс для загрузки CSV-отчётов сотрудниками склада" label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;%c4Name%&lt;/b&gt;&lt;/font&gt;&lt;div&gt;[%c4Type%:&amp;nbsp;%c4Technology%]&lt;/div&gt;&lt;br&gt;&lt;div&gt;&lt;font style=&quot;font-size: 11px&quot;&gt;&lt;font color=&quot;#E6E6E6&quot;&gt;%c4Description%&lt;/font&gt;&lt;/div&gt;" id="container-webapp">
+          <mxCell style="shape=mxgraph.c4.webBrowserContainer2;whiteSpace=wrap;html=1;boundedLbl=1;rounded=0;labelBackgroundColor=none;strokeColor=#118ACD;fillColor=#23A2D9;strokeColor2=#0E7DAD;fontSize=12;fontColor=#ffffff;align=center;metaEdit=1;points=[[0.5,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.5,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];resizable=0;" parent="1" vertex="1">
+            <mxGeometry x="1370" y="155" width="240" height="140" as="geometry" />
+          </mxCell>
+        </object>
+
+        <!-- Component: Java App (WildFly/Spring Boot) -->
+        <object placeholders="1" c4Name="Java App" c4Type="Component" c4Technology="Spring Boot / WildFly" c4Description="Обрабатывает HTTP-запросы, валидирует файлы, сохраняет в GCS, запускает Spring Batch Job" label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;%c4Name%&lt;/b&gt;&lt;/font&gt;&lt;div&gt;[%c4Type%: %c4Technology%]&lt;/div&gt;&lt;br&gt;&lt;div&gt;&lt;font style=&quot;font-size: 11px&quot;&gt;%c4Description%&lt;/font&gt;&lt;/div&gt;" id="component-javaapp">
+          <mxCell style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fillColor=#63BEF2;fontColor=#ffffff;align=center;arcSize=6;strokeColor=#2086C9;metaEdit=1;resizable=0;points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];" parent="1" vertex="1">
+            <mxGeometry x="1790" y="100" width="240" height="110" as="geometry" />
+          </mxCell>
+        </object>
+
+        <!-- Component: Spring Batch Job -->
+        <object placeholders="1" c4Name="Spring Batch Job" c4Type="Component" c4Technology="Spring Batch 5 / Java 17" c4Description="ETL-пайплайн: читает CSV, обогащает данными программы лояльности, записывает в БД номенклатуры" label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;%c4Name%&lt;/b&gt;&lt;/font&gt;&lt;div&gt;[%c4Type%: %c4Technology%]&lt;/div&gt;&lt;br&gt;&lt;div&gt;&lt;font style=&quot;font-size: 11px&quot;&gt;%c4Description%&lt;/font&gt;&lt;/div&gt;" id="component-springbatch">
+          <mxCell style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fillColor=#007700;fontColor=#ffffff;align=center;arcSize=6;strokeColor=#005500;metaEdit=1;resizable=0;points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];" parent="1" vertex="1">
+            <mxGeometry x="1790" y="290" width="240" height="130" as="geometry" />
+          </mxCell>
+        </object>
+
+        <!-- Container: GCS (файловое хранилище) -->
+        <object placeholders="1" c4Name="Файловое хранилище" c4Type="Container" c4Technology="Google Cloud Storage" c4Description="Загруженные CSV-файлы отчётов" label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;%c4Name%&lt;/b&gt;&lt;/font&gt;&lt;div&gt;[%c4Type%:&amp;nbsp;%c4Technology%]&lt;/div&gt;&lt;br&gt;&lt;div&gt;&lt;font style=&quot;font-size: 11px&quot;&gt;&lt;font color=&quot;#E6E6E6&quot;&gt;%c4Description%&lt;/font&gt;&lt;/div&gt;" id="container-gcs">
+          <mxCell style="shape=cylinder3;size=15;whiteSpace=wrap;html=1;boundedLbl=1;rounded=0;labelBackgroundColor=none;fillColor=#23A2D9;fontSize=12;fontColor=#ffffff;align=center;strokeColor=#0E7DAD;metaEdit=1;points=[[0.5,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.5,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];resizable=0;" parent="1" vertex="1">
+            <mxGeometry x="2480" y="270" width="220" height="120" as="geometry" />
+          </mxCell>
+        </object>
+
+        <!-- Container: БД справочных данных (loyality_data) -->
+        <object placeholders="1" c4Name="БД справочных данных" c4Type="Container" c4Technology="PostgreSQL" c4Description="Данные программы лояльности (loyality_data), характеристики товаров, промоакции" label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;%c4Name%&lt;/b&gt;&lt;/font&gt;&lt;div&gt;[%c4Type%:&amp;nbsp;%c4Technology%]&lt;/div&gt;&lt;br&gt;&lt;div&gt;&lt;font style=&quot;font-size: 11px&quot;&gt;&lt;font color=&quot;#E6E6E6&quot;&gt;%c4Description%&lt;/font&gt;&lt;/div&gt;" id="container-refdb">
+          <mxCell style="shape=cylinder3;size=15;whiteSpace=wrap;html=1;boundedLbl=1;rounded=0;labelBackgroundColor=none;fillColor=#23A2D9;fontSize=12;fontColor=#ffffff;align=center;strokeColor=#0E7DAD;metaEdit=1;points=[[0.5,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.5,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];resizable=0;" parent="1" vertex="1">
+            <mxGeometry x="2200" y="480" width="220" height="120" as="geometry" />
+          </mxCell>
+        </object>
+
+        <!-- Container: БД номенклатуры (products) -->
+        <object placeholders="1" c4Name="БД номенклатуры" c4Type="Container" c4Technology="PostgreSQL" c4Description="Актуальные данные о наличии товаров на складах (таблица products)" label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;%c4Name%&lt;/b&gt;&lt;/font&gt;&lt;div&gt;[%c4Type%:&amp;nbsp;%c4Technology%]&lt;/div&gt;&lt;br&gt;&lt;div&gt;&lt;font style=&quot;font-size: 11px&quot;&gt;&lt;font color=&quot;#E6E6E6&quot;&gt;%c4Description%&lt;/font&gt;&lt;/div&gt;" id="container-proddb">
+          <mxCell style="shape=cylinder3;size=15;whiteSpace=wrap;html=1;boundedLbl=1;rounded=0;labelBackgroundColor=none;fillColor=#23A2D9;fontSize=12;fontColor=#ffffff;align=center;strokeColor=#0E7DAD;metaEdit=1;points=[[0.5,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.5,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];resizable=0;" parent="1" vertex="1">
+            <mxGeometry x="2480" y="480" width="220" height="120" as="geometry" />
+          </mxCell>
+        </object>
+
+        <!-- Container: JobRepository (Spring Batch metadata) -->
+        <object placeholders="1" c4Name="JobRepository" c4Type="Container" c4Technology="PostgreSQL (BATCH_* tables)" c4Description="Хранит метаданные выполнения Spring Batch Job: статус, контрольные точки, история запусков" label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;%c4Name%&lt;/b&gt;&lt;/font&gt;&lt;div&gt;[%c4Type%:&amp;nbsp;%c4Technology%]&lt;/div&gt;&lt;br&gt;&lt;div&gt;&lt;font style=&quot;font-size: 11px&quot;&gt;&lt;font color=&quot;#E6E6E6&quot;&gt;%c4Description%&lt;/font&gt;&lt;/div&gt;" id="container-jobrepo">
+          <mxCell style="shape=cylinder3;size=15;whiteSpace=wrap;html=1;boundedLbl=1;rounded=0;labelBackgroundColor=none;fillColor=#6FA3DB;fontSize=12;fontColor=#ffffff;align=center;strokeColor=#4A7FC0;metaEdit=1;points=[[0.5,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.5,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];resizable=0;" parent="1" vertex="1">
+            <mxGeometry x="1790" y="510" width="220" height="110" as="geometry" />
+          </mxCell>
+        </object>
+
+        <!-- Edge: Сотрудник склада -> Web App (использует) -->
+        <object placeholders="1" c4Type="Relationship" c4Technology="HTTPS / Browser" c4Description="Загружает CSV-отчёт" label="&lt;div style=&quot;text-align:center&quot;&gt;&lt;b&gt;%c4Description%&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;text-align:center&quot;&gt;[%c4Technology%]&lt;/div&gt;" id="rel-person-webapp">
+          <mxCell style="endArrow=blockThin;html=1;fontSize=10;fontColor=#404040;strokeWidth=1;endFill=1;strokeColor=#828282;edgeStyle=orthogonalEdgeStyle;" parent="1" source="person-warehouse" target="container-webapp" edge="1">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+        </object>
+
+        <!-- Edge: Web App -> Java App (REST API) -->
+        <object placeholders="1" c4Type="Relationship" c4Technology="REST API / HTTP" c4Description="Вызывает" label="&lt;div style=&quot;text-align:center&quot;&gt;&lt;b&gt;%c4Description%&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;text-align:center&quot;&gt;[%c4Technology%]&lt;/div&gt;" id="rel-webapp-javaapp">
+          <mxCell style="endArrow=blockThin;html=1;fontSize=10;fontColor=#404040;strokeWidth=1;endFill=1;strokeColor=#828282;edgeStyle=orthogonalEdgeStyle;" parent="1" source="container-webapp" target="component-javaapp" edge="1">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+        </object>
+
+        <!-- Edge: Java App -> GCS (сохраняет файл) -->
+        <object placeholders="1" c4Type="Relationship" c4Technology="GCS API / HTTPS" c4Description="Сохраняет CSV-файл" label="&lt;div style=&quot;text-align:center&quot;&gt;&lt;b&gt;%c4Description%&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;text-align:center&quot;&gt;[%c4Technology%]&lt;/div&gt;" id="rel-javaapp-gcs">
+          <mxCell style="endArrow=blockThin;html=1;fontSize=10;fontColor=#404040;strokeWidth=1;endFill=1;strokeColor=#828282;edgeStyle=orthogonalEdgeStyle;" parent="1" source="component-javaapp" target="container-gcs" edge="1">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+        </object>
+
+        <!-- Edge: Java App -> Spring Batch (запускает Job) -->
+        <object placeholders="1" c4Type="Relationship" c4Technology="JobLauncher / Spring" c4Description="Запускает ETL Job" label="&lt;div style=&quot;text-align:center&quot;&gt;&lt;b&gt;%c4Description%&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;text-align:center&quot;&gt;[%c4Technology%]&lt;/div&gt;" id="rel-javaapp-batch">
+          <mxCell style="endArrow=blockThin;html=1;fontSize=10;fontColor=#404040;strokeWidth=1;endFill=1;strokeColor=#005500;strokeColor=#228B22;edgeStyle=orthogonalEdgeStyle;" parent="1" source="component-javaapp" target="component-springbatch" edge="1">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+        </object>
+
+        <!-- Edge: Spring Batch -> GCS (читает CSV) -->
+        <object placeholders="1" c4Type="Relationship" c4Technology="GCS API / FlatFileItemReader" c4Description="Читает CSV-файл (Extract)" label="&lt;div style=&quot;text-align:center&quot;&gt;&lt;b&gt;%c4Description%&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;text-align:center&quot;&gt;[%c4Technology%]&lt;/div&gt;" id="rel-batch-gcs">
+          <mxCell style="endArrow=blockThin;html=1;fontSize=10;fontColor=#404040;strokeWidth=1;endFill=1;strokeColor=#228B22;edgeStyle=orthogonalEdgeStyle;" parent="1" source="component-springbatch" target="container-gcs" edge="1">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+        </object>
+
+        <!-- Edge: Spring Batch -> БД справочных (читает loyality_data) -->
+        <object placeholders="1" c4Type="Relationship" c4Technology="SQL / JdbcTemplate" c4Description="Читает данные лояльности (Transform)" label="&lt;div style=&quot;text-align:center&quot;&gt;&lt;b&gt;%c4Description%&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;text-align:center&quot;&gt;[%c4Technology%]&lt;/div&gt;" id="rel-batch-refdb">
+          <mxCell style="endArrow=blockThin;html=1;fontSize=10;fontColor=#404040;strokeWidth=1;endFill=1;strokeColor=#228B22;edgeStyle=orthogonalEdgeStyle;" parent="1" source="component-springbatch" target="container-refdb" edge="1">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+        </object>
+
+        <!-- Edge: Spring Batch -> БД номенклатуры (пишет products) -->
+        <object placeholders="1" c4Type="Relationship" c4Technology="SQL / JdbcBatchItemWriter" c4Description="Записывает обновлённые товары (Load)" label="&lt;div style=&quot;text-align:center&quot;&gt;&lt;b&gt;%c4Description%&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;text-align:center&quot;&gt;[%c4Technology%]&lt;/div&gt;" id="rel-batch-proddb">
+          <mxCell style="endArrow=blockThin;html=1;fontSize=10;fontColor=#404040;strokeWidth=1;endFill=1;strokeColor=#228B22;edgeStyle=orthogonalEdgeStyle;" parent="1" source="component-springbatch" target="container-proddb" edge="1">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+        </object>
+
+        <!-- Edge: Spring Batch -> JobRepository -->
+        <object placeholders="1" c4Type="Relationship" c4Technology="SQL / Spring Batch JDBC" c4Description="Сохраняет метаданные Job (статус, checkpoint)" label="&lt;div style=&quot;text-align:center&quot;&gt;&lt;b&gt;%c4Description%&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;text-align:center&quot;&gt;[%c4Technology%]&lt;/div&gt;" id="rel-batch-jobrepo">
+          <mxCell style="endArrow=blockThin;html=1;fontSize=10;fontColor=#404040;strokeWidth=1;endFill=1;strokeColor=#4A7FC0;edgeStyle=orthogonalEdgeStyle;" parent="1" source="component-springbatch" target="container-jobrepo" edge="1">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+        </object>
+
+        <!-- Legend -->
+        <mxCell id="legend-title" value="&lt;b&gt;Легенда&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=13;" parent="1" vertex="1">
+          <mxGeometry x="900" y="400" width="100" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="legend-batch" value="Spring Batch (новый компонент)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#007700;fontColor=#ffffff;strokeColor=#005500;arcSize=6;" parent="1" vertex="1">
+          <mxGeometry x="900" y="440" width="240" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="legend-jobrepo" value="JobRepository (новый контейнер)" style="shape=cylinder3;size=10;whiteSpace=wrap;html=1;fillColor=#6FA3DB;fontColor=#ffffff;strokeColor=#4A7FC0;" parent="1" vertex="1">
+          <mxGeometry x="900" y="500" width="240" height="50" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

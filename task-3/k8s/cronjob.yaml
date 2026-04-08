@@ -1,0 +1,64 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: shipments-export
+  namespace: logistics
+spec:
+  # Ежедневно в 20:00 по UTC (23:00 МСК)
+  schedule: "0 20 * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: export
+              image: logistics-export:1.0
+              imagePullPolicy: Never
+              env:
+                - name: DB_HOST
+                  valueFrom:
+                    configMapKeyRef:
+                      name: postgres-config
+                      key: DB_HOST
+                - name: DB_PORT
+                  valueFrom:
+                    configMapKeyRef:
+                      name: postgres-config
+                      key: DB_PORT
+                - name: DB_NAME
+                  valueFrom:
+                    secretKeyRef:
+                      name: postgres-secret
+                      key: POSTGRES_DB
+                - name: DB_USER
+                  valueFrom:
+                    secretKeyRef:
+                      name: postgres-secret
+                      key: POSTGRES_USER
+                - name: DB_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: postgres-secret
+                      key: POSTGRES_PASSWORD
+                - name: TABLE_NAME
+                  valueFrom:
+                    configMapKeyRef:
+                      name: postgres-config
+                      key: TABLE_NAME
+                - name: EXPORT_DIR
+                  valueFrom:
+                    configMapKeyRef:
+                      name: postgres-config
+                      key: EXPORT_DIR
+              volumeMounts:
+                - name: export-data
+                  mountPath: /data/exports
+          volumes:
+            - name: export-data
+              persistentVolumeClaim:
+                claimName: export-pvc

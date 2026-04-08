@@ -1,0 +1,82 @@
+version: "3.8"
+
+services:
+  postgresdb:
+    image: postgres
+    restart: unless-stopped
+    env_file: ./.env
+    environment:
+      - POSTGRES_USER=$POSTGRESDB_USER
+      - POSTGRES_PASSWORD=$POSTGRESDB_ROOT_PASSWORD
+      - POSTGRES_DB=$POSTGRESDB_DATABASE
+    ports:
+      - $POSTGRESDB_LOCAL_PORT:$POSTGRESDB_DOCKER_PORT
+
+  elasticsearch:
+    image: 'docker.elastic.co/elasticsearch/elasticsearch:7.17.28'
+    platform: linux/amd64
+    container_name: 'elasticsearch'
+    restart: 'unless-stopped'
+    ports:
+      - '9200:9200'
+      - '9300:9300'
+    environment:
+      - 'discovery.type=single-node'
+      - 'xpack.security.enabled=false'
+      - 'ES_JAVA_OPTS=-Xms512m -Xmx512m'
+    healthcheck:
+      test: 'curl -f http://localhost:9200 || exit 1'
+
+  logstash:
+    image: 'docker.elastic.co/logstash/logstash:7.17.28'
+    container_name: 'logstash'
+    restart: 'unless-stopped'
+    ports:
+      - '5044:5044'
+    volumes:
+      - './logstash/pipeline:/usr/share/logstash/pipeline/'
+    depends_on:
+      - 'elasticsearch'
+    healthcheck:
+      test: 'curl -f http://localhost:9600 || exit 1'
+
+  kibana:
+    image: 'docker.elastic.co/kibana/kibana:7.17.28'
+    container_name: 'kibana'
+    restart: 'unless-stopped'
+    ports:
+      - '5601:5601'
+    environment:
+      - 'ELASTICSEARCH_HOSTS=http://elasticsearch:9200'
+    depends_on:
+      - 'elasticsearch'
+    healthcheck:
+      test: 'curl -f http://localhost:5601 || exit 1'
+
+  filebeat:
+    build: 'filebeat'
+    container_name: 'filebeat'
+    restart: 'unless-stopped'
+    volumes:
+      - '/var/run/docker.sock:/var/run/docker.sock'
+      - '/var/lib/docker/containers:/usr/share/dockerlogs/data:ro'
+    depends_on:
+      - 'elasticsearch'
+      - 'logstash'
+
+  app:
+    depends_on:
+      - postgresdb
+      - filebeat
+    image: batch-processing
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    env_file: ./.env
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgresdb:5432/$POSTGRESDB_DATABASE
+      - SPRING_DATASOURCE_USERNAME=$POSTGRESDB_USER
+      - SPRING_DATASOURCE_PASSWORD=$POSTGRESDB_ROOT_PASSWORD

@@ -69,7 +69,7 @@ services:
     container_name: 'prometheus'
     restart: 'unless-stopped'
     volumes:
-      - './prometheus/prometheus.yml:/etc/prometheus/prometheus.yml'
+      - './prometheus:/etc/prometheus'
     ports:
       - '9090:9090'
     healthcheck:
@@ -93,7 +93,7 @@ services:
   app:
     depends_on:
       - postgresdb
-      - filebeat1
+      - filebeat
       - grafana
     image: batch-processing
     build:

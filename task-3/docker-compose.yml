@@ -1,0 +1,41 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: logistics-postgres
+    environment:
+      POSTGRES_USER: logistics
+      POSTGRES_PASSWORD: logistics123
+      POSTGRES_DB: logistics_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U logistics -d logistics_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  export_job:
+    build: ./export_job
+    container_name: logistics-export
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DB_HOST: postgres
+      DB_PORT: "5432"
+      DB_NAME: logistics_db
+      DB_USER: logistics
+      DB_PASSWORD: logistics123
+      TABLE_NAME: shipments
+      EXPORT_DIR: /data/exports
+    volumes:
+      - export_data:/data/exports
+
+volumes:
+  postgres_data:
+  export_data:
